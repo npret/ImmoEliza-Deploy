@@ -46,14 +46,19 @@ class PricePredictor:
         Returns:
             The loaded model.
         """
+        # Ensure the local directory exists
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+        # Download the model if it does not exist locally
         if not os.path.exists(local_path):
             print(f"Downloading model from {url}...")
             response = requests.get(url, stream=True)
-            response.raise_for_status()
+            response.raise_for_status()  # Raise an error if the request fails
             with open(local_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
+
+        # Load the model using joblib
         return joblib.load(local_path)
 
     def predict(self, features: Any, preprocessor: Any) -> float:
