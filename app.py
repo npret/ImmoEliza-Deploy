@@ -19,8 +19,9 @@ feature_icons = {
     "Municipality": "📍",
     "Region": "🌍",
     "Living Area": "📐",
-    "Total Outdoor Area": "🌳"
+    "Total Outdoor Area": "🌳",
 }
+
 
 class PropertyApp:
     """
@@ -40,7 +41,9 @@ class PropertyApp:
         Returns:
             str: The formatted price string.
         """
-        return f"€{locale.format_string('%.2f', price, grouping=True).replace(',', ' ')}"
+        return (
+            f"€{locale.format_string('%.2f', price, grouping=True).replace(',', ' ')}"
+        )
 
     @staticmethod
     def get_size_category(area: int) -> str:
@@ -74,16 +77,24 @@ class PropertyApp:
         """
         st.sidebar.header("Property Features")
 
-        property_type = st.sidebar.selectbox("House or Apartment?", ["Apartment", "House"])
+        property_type = st.sidebar.selectbox(
+            "House or Apartment?", ["Apartment", "House"]
+        )
         bedrooms = st.sidebar.number_input("Number of Bedrooms", min_value=0, value=2)
 
         # Toggle switches for binary features
         with st.sidebar:
             kitchen_equipped = st_toggle_switch(
-                label="Is the kitchen equipped?", key="kitchen_toggle", default_value=False, label_after=True
+                label="Is the kitchen equipped?",
+                key="kitchen_toggle",
+                default_value=False,
+                label_after=True,
             )
             swimming_pool = st_toggle_switch(
-                label="Is there a swimming pool?", key="swimming_pool_toggle", default_value=False, label_after=True
+                label="Is there a swimming pool?",
+                key="swimming_pool_toggle",
+                default_value=False,
+                label_after=True,
             )
 
         state = st.sidebar.selectbox(
@@ -99,7 +110,9 @@ class PropertyApp:
             ],
         )
         facades = st.sidebar.number_input("Number of Facades", min_value=1, value=2)
-        region = st.sidebar.selectbox("Region", list(self.preprocessor.region_mapping.keys()))
+        region = st.sidebar.selectbox(
+            "Region", list(self.preprocessor.region_mapping.keys())
+        )
 
         # Dynamically filter municipalities based on the selected region
         municipalities = [
@@ -152,7 +165,10 @@ class PropertyApp:
             icon = feature_icons.get(formatted_key, "")
             if isinstance(value, bool):  # Convert binary features to "Yes"/"No"
                 value = "Yes" if value else "No"
-            if key in ["living_area", "Total_Outdoor_Area"]:  # Append m² for area features
+            if key in [
+                "living_area",
+                "Total_Outdoor_Area",
+            ]:  # Append m² for area features
                 value = f"{value} m²"
 
             with cols[i % 2]:
@@ -179,6 +195,7 @@ class PropertyApp:
                 st.success(f"Predicted Price: {formatted_price}")
             except Exception as e:
                 st.error(f"Error during prediction: {e}")
+
 
 # Run the app
 if __name__ == "__main__":
