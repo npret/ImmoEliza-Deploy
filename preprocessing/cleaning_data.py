@@ -81,7 +81,7 @@ class DataPreprocessor:
         bedroom_bin_code = 1 if bedrooms <= 2 else 2 if bedrooms <= 4 else 3
         log_living_area = np.log(data["living_area"])
         sqrt_total_outdoor_area = data["Sqrt_Total_Outdoor_Area"]
-        
+
         # Create the feature DataFrame
         features = pd.DataFrame(
             {

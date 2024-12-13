@@ -2,6 +2,7 @@ import joblib
 import numpy as np
 from typing import Any, Dict
 
+
 class PricePredictor:
     """
     Handles price prediction using a pre-trained model.
@@ -10,14 +11,14 @@ class PricePredictor:
         pipeline: The loaded pipeline containing preprocessing and model steps.
         model: The trained model extracted from the pipeline.
     """
-    
+
     def __init__(self, model_path: str = "model/trained_model.pkl"):
         """
         Initializes the PricePredictor by loading the pipeline and model.
 
         Args:
             model_path (str): Path to the trained model file.
-        """        
+        """
         pipeline = joblib.load(model_path)
         self.pipeline = pipeline
 
@@ -44,9 +45,9 @@ class PricePredictor:
         # Preprocess the input features
         raw_features = preprocessor.preprocess(features)
         processed_features = self.pipeline.preprocess(raw_features)
-    
+
         # Predict using the pipeline's model
         predicted_price = self.model.predict(processed_features)
-    
+
         # Reverse log transformation
         return np.expm1(predicted_price[0])
