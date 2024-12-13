@@ -6,7 +6,10 @@ from streamlit_toggle import st_toggle_switch
 import locale
 
 # Configure locale for price formatting
-locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+try:
+    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+except locale.Error:
+    locale.setlocale(locale.LC_ALL, "")  # Use system default locale
 
 # Define feature icons
 feature_icons = {
