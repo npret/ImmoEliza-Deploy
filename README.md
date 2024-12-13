@@ -56,6 +56,11 @@ The app will:
    - View the predicted property price in real-time.
    - Analyze results with a clean and intuitive UI.
 
+4. **NOTE**
+   - trained_model.pkl is too big to upload, so app won't work without it.
+   - Download: https://drive.google.com/drive/folders/1peAoX1GtskDO0ecF6cRYRNSI03Drnzvp?usp=sharing
+   - Add to model folder in root
+
 ---
 
 ## Visuals
