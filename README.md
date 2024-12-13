@@ -1,6 +1,6 @@
 # Challenge: API Deployment
 
-## Repository: `challenge-app-deployment`
+## Repository: `ImmoEliza-Deploy`
 
 ---
 
@@ -62,7 +62,7 @@ The app will:
 
 Here is a glimpse of the app:
 
-![App Screenshot](path/to/screenshot.png)
+![App Screenshot](images/app-screenshot.png)
 
 ---
 
