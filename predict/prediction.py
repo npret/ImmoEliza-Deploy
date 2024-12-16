@@ -3,9 +3,12 @@ import numpy as np
 from typing import Any
 import os
 import requests
-from .rf_pipeline import RandomForestPipeline
+import sys
 
-
+# Ensure the directory containing rf_pipeline.py is in sys.path
+module_dir = os.path.dirname(os.path.abspath(__file__))  # Current directory of prediction.py
+sys.path.append(module_dir)
+from rf_pipeline import RandomForestPipeline
 
 class PricePredictor:
     """
