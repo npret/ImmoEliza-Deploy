@@ -1,6 +1,8 @@
 import joblib
 import numpy as np
-from typing import Any, Dict
+from typing import Any
+import os
+import requests
 
 
 class PricePredictor:
@@ -12,32 +14,75 @@ class PricePredictor:
         model: The trained model extracted from the pipeline.
     """
 
-    def __init__(self, model_path: str = "model/trained_model.pkl"):
+    def __init__(
+        self, model_url: str, local_model_path: str = "model/trained_model.pkl"
+    ):
         """
-        Initializes the PricePredictor by loading the pipeline and model.
+        Initializes the PricePredictor by downloading the model if not present locally.
 
         Args:
-            model_path (str): Path to the trained model file.
+            model_url (str): URL to download the model from.
+            local_model_path (str): Local path to store the downloaded model.
         """
-        pipeline = joblib.load(model_path)
-        self.pipeline = pipeline
+        self.pipeline = self.load_model(model_url, local_model_path)
 
         # Extract the model from the pipeline
-        if hasattr(pipeline, "model"):
-            self.model = pipeline.model
-        elif hasattr(pipeline, "steps"):
-            self.model = pipeline.steps[-1][1]
+        if hasattr(self.pipeline, "model"):
+            self.model = self.pipeline.model
+        elif hasattr(self.pipeline, "steps"):
+            self.model = self.pipeline.steps[-1][1]
         else:
-            # If no known model attribute, assume pipeline itself is the model
-            self.model = pipeline
+            self.model = self.pipeline  # Assume pipeline itself is the model
 
-    def predict(self, features, preprocessor):
+    @staticmethod
+    def load_model(url: str, local_path: str) -> Any:
+        """
+        Downloads the model from the given URL if not already present locally.
+
+        Args:
+            url (str): URL to download the model.
+            local_path (str): Path to save the model.
+
+        Returns:
+            The loaded model.
+        """
+        # Ensure the local directory exists
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+        # Download the model if it does not exist locally
+        if not os.path.exists(local_path):
+            print(f"Downloading model from {url}...")
+            session = requests.Session()
+            response = session.get(url, stream=True)
+
+            # Handle Google Drive specific responses
+            if "drive.google.com" in url:
+                confirm_token = None
+                for key, value in response.cookies.items():
+                    if key.startswith("download_warning"):
+                        confirm_token = value
+                        break
+
+                if confirm_token:
+                    url = f"{url}&confirm={confirm_token}"
+                    response = session.get(url, stream=True)
+
+            response.raise_for_status()
+            with open(local_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+
+        # Load the model using joblib
+        return joblib.load(local_path)
+
+    def predict(self, features: Any, preprocessor: Any) -> float:
         """
         Predicts the price of a property.
 
         Args:
-            features (Dict[str, Any]): The raw input features from the user.
-            preprocessor (Any): The DataPreprocessor object to preprocess features.
+            features: Raw input features for prediction.
+            preprocessor: Preprocessor to prepare the input data.
 
         Returns:
             float: The predicted property price.

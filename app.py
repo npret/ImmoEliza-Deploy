@@ -202,6 +202,6 @@ class PropertyApp:
 
 # Run the app
 if __name__ == "__main__":
-    MODEL_URL = "https://drive.google.com/uc?id=1NJjCR_QQAtdWQ77YN815223f0ynm3-AG"
+    MODEL_URL = "https://drive.google.com/uc?id=1NJjCR_QQAtdWQ77YN815223f0ynm3-AG&export=download"
     app = PropertyApp(MODEL_URL)
     app.run()
