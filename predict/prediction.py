@@ -72,8 +72,14 @@ class PricePredictor:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
+            print(f"Model downloaded and saved to {local_path}")
+
+        # Ensure the file is fully written and accessible
+        if not os.path.exists(local_path):
+            raise FileNotFoundError(f"Failed to download the model to {local_path}")
 
         # Load the model using joblib
+        print(f"Loading model from {local_path}...")
         return joblib.load(local_path)
 
     def predict(self, features: Any, preprocessor: Any) -> float:
