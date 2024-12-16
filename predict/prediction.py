@@ -3,6 +3,8 @@ import numpy as np
 from typing import Any
 import os
 import requests
+from .rf_pipeline import RandomForestPipeline
+
 
 
 class PricePredictor:
